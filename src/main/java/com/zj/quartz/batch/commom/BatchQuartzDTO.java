@@ -2,8 +2,6 @@ package com.zj.quartz.batch.commom;
 
 import java.util.List;
 
-import lombok.Data;
-
 public class BatchQuartzDTO {
     private String jName;
     private String jGroup;

@@ -23,13 +23,14 @@ public class BatchController {
     private BizBatchJobInfoMapper bizBatchJobInfoMapper;
 
     @PostMapping(value = "/addbatch")
-    public void addBatch(String jobName, String stepName, String bodyString, String priorityOrder,String groupName) {
+    public void addBatch(String jobName, String stepName, String bodyString, String priorityOrder,String groupName,String restUrl) {
         BizBatchJobInfo bizBatchJobInfo = new BizBatchJobInfo();
         bizBatchJobInfo.setJobName(jobName);
         bizBatchJobInfo.setStepName(stepName);
         bizBatchJobInfo.setBodyString(bodyString);
         bizBatchJobInfo.setPriorityOrder(Integer.valueOf(priorityOrder));
         bizBatchJobInfo.setGroupName(groupName);
+        bizBatchJobInfo.setRestUrl(restUrl);
         bizBatchJobInfoMapper.insert(bizBatchJobInfo);
     }
 
@@ -42,6 +43,14 @@ public class BatchController {
         map.put("batchInfos", selectAll);
         map.put("number", selectAll.size());
         return map;
+    }
+    
+
+    @PostMapping(value = "/delete")
+    public void deleteBatch(String stepName) {
+        BizBatchJobInfo bizBatchJobInfo = new BizBatchJobInfo();
+        bizBatchJobInfo.setStepName(stepName);
+        bizBatchJobInfoMapper.delete(bizBatchJobInfo);
     }
 
 }

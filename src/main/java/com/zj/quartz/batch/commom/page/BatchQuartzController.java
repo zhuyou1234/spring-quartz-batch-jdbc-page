@@ -1,6 +1,8 @@
 package com.zj.quartz.batch.commom.page;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.zj.quartz.batch.commom.BatchDTO;
 import com.zj.quartz.batch.commom.BatchQuartzDTO;
+import com.zj.quartz.batch.commom.BatchQuartzJob.BizBatchJobInfoView;
 import com.zj.quartz.batch.commom.QuartzBatchService;
 import com.zj.quartz.batch.commom.batch.mapper.dao.BizBatchJobInfoMapper;
 import com.zj.quartz.batch.commom.batch.mapper.dao.BizJobInfoMapper;
@@ -95,13 +98,29 @@ public class BatchQuartzController {
             String groupName = bizJobInfo.getGroupName();
             bb.setGroupName(groupName);
             bb.setCronExpression(bizJobInfo.getCronExpression());
-            StringJoiner sj = new StringJoiner("<br/>");
             BizBatchJobInfo bbji = new BizBatchJobInfo();
             bbji.setJobName(jobName);
             bbji.setGroupName(groupName);
-            List<BizBatchJobInfo> select = bizBatchJobInfoMapper.select(bbji);
-            for (BizBatchJobInfo bizBatchJobInfo : select) {
-                sj.add(JSON.toJSONString(bizBatchJobInfo));
+            List<BizBatchJobInfo> jobInfos = bizBatchJobInfoMapper.select(bbji);
+            Collections.sort(jobInfos, new Comparator<BizBatchJobInfo>() {
+                @Override
+                public int compare(BizBatchJobInfo o1, BizBatchJobInfo o2) {
+                    if (o1.getPriorityOrder() == o2.getPriorityOrder()) {
+                        return 0;
+                    }
+                    return o1.getPriorityOrder() > o2.getPriorityOrder() ? -1 : 1;
+                }
+            });
+            BizBatchJobInfoView curInfoView = BizBatchJobInfoView.build(jobInfos);
+            StringJoiner sj = new StringJoiner(" --> ");
+            while (curInfoView != null) {
+                StringJoiner tmSj = new StringJoiner(",", "[", "]");
+                List<BizBatchJobInfo> curJobInfos = curInfoView.getJobInfos();
+                for (BizBatchJobInfo bizBatchJobInfo : curJobInfos) {
+                    tmSj.add(bizBatchJobInfo.getStepName());
+                }
+                sj.add(tmSj.toString());
+                curInfoView = curInfoView.getChildView();
             }
             bb.setBatchInfos(sj.toString());
             bizJobInfoViews.add(bb);

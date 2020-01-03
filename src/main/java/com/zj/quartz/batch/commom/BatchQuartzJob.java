@@ -135,7 +135,7 @@ public class BatchQuartzJob extends QuartzJobBean {
     }
 
     @Data
-    static class BizBatchJobInfoView {
+    public static class BizBatchJobInfoView {
 
         private List<BizBatchJobInfo> jobInfos = new ArrayList<BizBatchJobInfo>();
 

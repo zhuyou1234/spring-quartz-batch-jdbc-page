@@ -106,4 +106,24 @@
 		<!-- <version>3.5.3</version> -->
 		<!-- </dependency> -->
 	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>${basedir}/resources</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

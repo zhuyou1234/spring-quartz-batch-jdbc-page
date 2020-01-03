@@ -30,7 +30,7 @@ public class BizBatchJobInfo {
     @Column(name = "group_name")
     private String groupName;
     
-    @Column(name = "cron_expression")
-    private String cronExpression;
+    @Column(name = "rest_url")
+    private String restUrl;
 
 }

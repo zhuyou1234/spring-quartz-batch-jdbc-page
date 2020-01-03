@@ -55,6 +55,12 @@
 		      sortable>
 		    </el-table-column>
 		    
+		    <el-table-column
+		      prop="restUrl"
+		      label="post请求url"
+		      sortable>
+		    </el-table-column>
+		    
    		    <el-table-column
 		      prop="bodyString"
 		      label="batch参数"
@@ -101,6 +107,9 @@
 		    </el-form-item>	    
 		    <el-form-item label="step名称" label-width="120px" style="width:35%">
 		      <el-input v-model="form.stepName" auto-complete="off"></el-input>
+		    </el-form-item>
+		    <el-form-item label="post请求url" label-width="120px" style="width:35%">
+		      <el-input v-model="form.restUrl" auto-complete="off"></el-input>
 		    </el-form-item>
 		    <el-form-item label="batch参数" label-width="120px" style="width:35%">
 		      <el-input v-model="form.bodyString" auto-complete="off"></el-input>
@@ -188,7 +197,7 @@
 		        
 		        //添加
 		        add: function(){
-		        	this.$http.post('batch/addbatch',{"jobName":this.form.jobName,"stepName":this.form.stepName,"bodyString":this.form.bodyString,"priorityOrder":this.form.priorityOrder, "groupName":this.form.groupName},{emulateJSON: true}).then(function(res){
+		        	this.$http.post('batch/addbatch',{"jobName":this.form.jobName,"stepName":this.form.stepName,"bodyString":this.form.bodyString,"priorityOrder":this.form.priorityOrder, "groupName":this.form.groupName, "restUrl":this.form.restUrl},{emulateJSON: true}).then(function(res){
         				this.loadData(this.currentPage, this.pagesize);
         				this.dialogFormVisible = false;
                     },function(){
@@ -206,7 +215,15 @@
 		        handleCurrentChange: function(val) {
 		            this.currentPage = val;
 		            this.loadData(this.currentPage, this.pagesize);
-		        },	      
+		        },	 
+		        //单行删除
+			    handleDelete: function(index, row) {
+					this.$http.post('batch/delete',{"stepName":row.stepName},{emulateJSON: true}).then(function(res){
+						this.loadData( this.currentPage, this.pagesize);
+		            },function(){
+		                console.log('failed');
+		            });
+		        },
 		        		        
 		    },	    
 		    
